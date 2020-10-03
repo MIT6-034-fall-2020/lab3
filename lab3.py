@@ -9,16 +9,35 @@ from test_problems import get_pokemon_problem
 
 def has_empty_domains(csp) :
     """Returns True if the problem has one or more empty domains, otherwise False"""
-    domains = csp.domains
-    for var in domains.keys():
-        if domains[var] == []:
+    domains = csp.domains # gets domains
+    for var in domains.keys(): # goes through variables
+        if domains[var] == []: # sees if domain list is empty
             return True
     return False
 
 def check_all_constraints(csp) :
     """Return False if the problem's assigned values violate some constraint,
     otherwise True"""
-    raise NotImplementedError
+    """
+    Gets all the assigned variables
+    Iterates through them and checks each of their constraints
+    Check based on the value 
+    Only perform checks if other variable was assigned
+    """
+
+    assignments = csp.assignments # gets assigned variables-value dict
+    assigned_vars = assignments.keys() # get the assigned variables
+    for var in assigned_vars: # iterates per assigned variables
+        constraints = csp.constraints_between(var, None) # gets constraints related to variable
+        for constraint in constraints: # iterates through those constraints
+            var2 = constraint.var2 # gets other variable 
+            if var2 in assigned_vars: # check if other variable is assigned
+                val1 = assignments[var] # gets val1 and val2
+                val2 = assignments[var2]
+                if not constraint.check(val1, val2): # checks for validity
+                    return False
+    return True
+
 
 
 #### Part 2: Depth-First Constraint Solver #####################################
