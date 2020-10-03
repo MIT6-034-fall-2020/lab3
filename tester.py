@@ -449,11 +449,5 @@ make_test, get_tests = make_test_counter_decorator()
 
 
 if __name__ == '__main__':
-    if 'submit' in sys.argv:
-        test_online()
-    elif test_offline():
-        if "IDLE" in sys.executable:
-            print("Submitting and testing online...")
-            test_online()
-        else:
-            print("Local tests passed! Run 'python3 %s submit' to submit your code and have it graded." % sys.argv[0])
+    if test_offline():
+        print("Local tests passed! Submit your code on Canvas to have it graded.")
