@@ -9,7 +9,11 @@ from test_problems import get_pokemon_problem
 
 def has_empty_domains(csp) :
     """Returns True if the problem has one or more empty domains, otherwise False"""
-    raise NotImplementedError
+    domains = csp.domains
+    for var in domains.keys():
+        if domains[var] == []:
+            return True
+    return False
 
 def check_all_constraints(csp) :
     """Return False if the problem's assigned values violate some constraint,
