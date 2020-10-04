@@ -91,7 +91,36 @@ def eliminate_from_neighbors(csp, var) :
     once.  If no domains were reduced, returns empty list.
     If a domain is reduced to size 0, quits immediately and returns None.
     """
-    raise NotImplementedError
+    # see which of if w and v of W and V are incompatible
+    def compare_val(V, W, v, w, csp=csp):
+        constraints = csp.constraints_between(V, W)
+        for constraint in constraints:
+            if not constraint.check(v, w):
+                return False
+        return True
+
+    reduced = []
+    changed_vars = set()
+    V_domain = csp.get_domain(var)
+    neighbors = csp.get_neighbors(var) # get all neighbors
+    for W in neighbors:
+        W_domain = csp.get_domain(W)
+        for w in W_domain:
+            at_least_one = False
+            for v in V_domain:
+                if compare_val(var, W, v, w):
+                    at_least_one = True
+            if not at_least_one:
+                reduced.append((W,w)) # add removed states and value
+                changed_vars.add(W)
+
+    for (var, val) in reduced:
+        csp.eliminate(var, val)
+        if not csp.get_domain(var):
+            return None
+
+    return sorted(list(changed_vars))
+
 
 # Because names give us power over things (you're free to use this alias)
 forward_check = eliminate_from_neighbors
