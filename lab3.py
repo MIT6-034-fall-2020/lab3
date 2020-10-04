@@ -267,17 +267,17 @@ def propagate(enqueue_condition_fn, csp, queue=None) :
 def condition_domain_reduction(csp, var) :
     """Returns True if var should be enqueued under the all-reduced-domains
     condition, otherwise False"""
-    raise NotImplementedError
+    return True
 
 def condition_singleton(csp, var) :
     """Returns True if var should be enqueued under the singleton-domains
     condition, otherwise False"""
-    raise NotImplementedError
+    return (len(csp.get_domain(var)) == 1)
 
 def condition_forward_checking(csp, var) :
     """Returns True if var should be enqueued under the forward-checking
     condition, otherwise False"""
-    raise NotImplementedError
+    return False
 
 
 #### Part 5B: Generic Constraint Solver ########################################
