@@ -116,6 +116,8 @@ def eliminate_from_neighbors(csp, var) :
 
     for (var, val) in reduced:
         csp.eliminate(var, val)
+        
+    for var in changed_vars:
         if not csp.get_domain(var):
             return None
 
@@ -156,7 +158,8 @@ def solve_constraint_forward_checking(problem) :
 # QUESTION 2: How many extensions does it take to solve the Pokemon problem
 #    with DFS and forward checking?
 
-ANSWER_2 = None
+print(solve_constraint_forward_checking(get_pokemon_problem()))
+ANSWER_2 = 9
 
 
 #### Part 4: Domain Reduction ##################################################
@@ -172,7 +175,21 @@ def domain_reduction(csp, queue=None) :
     If a domain is reduced to size 0, quits immediately and returns None.
     This function modifies the original csp.
     """
-    raise NotImplementedError
+    dequeue = []
+    # Only set queue if queue is None, not if empty
+    if queue == None: 
+        queue = csp.get_all_variables()
+    while queue:
+        var = queue.pop(0)
+        dequeue.append(var)
+        fc = forward_check(csp, var)
+        if fc == None:
+            return None
+        for i in fc:
+            if i not in queue:
+                queue.append(i)
+
+    return dequeue
 
 
 # QUESTION 3: How many extensions does it take to solve the Pokemon problem
