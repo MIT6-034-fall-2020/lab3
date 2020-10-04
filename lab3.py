@@ -49,7 +49,26 @@ def solve_constraint_dfs(problem) :
     2. the number of extensions made (the number of problems popped off the agenda).
     If no solution was found, return None as the first element of the tuple.
     """
-    raise NotImplementedError
+    queue = [problem]
+    extensions = 0
+    while queue:
+        curr = queue.pop(0)
+        extensions += 1
+        if not has_empty_domains(curr):
+            if check_all_constraints(curr):
+                if curr.unassigned_vars:
+                    var = curr.pop_next_unassigned_var()
+                    domains = curr.get_domain(var)
+                    new_problems = []
+                    for value in domains:
+                        new_problem = curr.copy()
+                        new_problem.set_assignment(var, value)
+                        new_problems.append(new_problem)
+                    queue = new_problems + queue
+                else:
+                    return (curr.assignments, extensions)
+
+    return (None, extensions)
 
 
 # QUESTION 1: How many extensions does it take to solve the Pokemon problem
@@ -58,7 +77,8 @@ def solve_constraint_dfs(problem) :
 # Hint: Use get_pokemon_problem() to get a new copy of the Pokemon problem
 #    each time you want to solve it with a different search method.
 
-ANSWER_1 = None
+print(solve_constraint_dfs(get_pokemon_problem()))
+ANSWER_1 = 20
 
 
 #### Part 3: Forward Checking ##################################################
