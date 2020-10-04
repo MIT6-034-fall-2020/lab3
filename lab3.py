@@ -195,7 +195,11 @@ def domain_reduction(csp, queue=None) :
 # QUESTION 3: How many extensions does it take to solve the Pokemon problem
 #    with DFS (no forward checking) if you do domain reduction before solving it?
 
-ANSWER_3 = None
+q3 = get_pokemon_problem()
+domain_reduction(q3)
+print(solve_constraint_dfs(q3))
+
+ANSWER_3 = 6
 
 
 def solve_constraint_propagate_reduced_domains(problem) :
@@ -204,7 +208,29 @@ def solve_constraint_propagate_reduced_domains(problem) :
     propagation through all reduced domains.  Same return type as
     solve_constraint_dfs.
     """
-    raise NotImplementedError
+    queue = [problem]
+    extensions = 0
+    while queue:
+        curr = queue.pop(0)
+        extensions += 1
+        if not has_empty_domains(curr):
+            if check_all_constraints(curr):
+                if curr.unassigned_vars:
+                    var = curr.pop_next_unassigned_var()
+                    domains = curr.get_domain(var)
+                    new_problems = []
+                    for value in domains:
+                        new_problem = curr.copy()
+                        new_problem.set_assignment(var, value)
+                        domain_reduction(new_problem, [var])
+                        forward_check(new_problem, var)
+                        new_problems.append(new_problem)
+                    queue = new_problems + queue
+                else:
+                    return (curr.assignments, extensions)
+
+    return (None, extensions)
+
 
 
 # QUESTION 4: How many extensions does it take to solve the Pokemon problem
