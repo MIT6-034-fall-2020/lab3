@@ -236,7 +236,8 @@ def solve_constraint_propagate_reduced_domains(problem) :
 # QUESTION 4: How many extensions does it take to solve the Pokemon problem
 #    with forward checking and propagation through reduced domains?
 
-ANSWER_4 = None
+print(solve_constraint_propagate_reduced_domains(get_pokemon_problem()))
+ANSWER_4 = 7
 
 
 #### Part 5A: Generic Domain Reduction #########################################
@@ -247,7 +248,21 @@ def propagate(enqueue_condition_fn, csp, queue=None) :
     Uses enqueue_condition_fn to determine whether to enqueue a variable whose
     domain has been reduced. Same return type as domain_reduction.
     """
-    raise NotImplementedError
+    dequeue = []
+    if queue == None: 
+        queue = csp.get_all_variables()
+    while queue:
+        var = queue.pop(0)
+        dequeue.append(var)
+        fc = forward_check(csp, var)
+        if fc == None:
+            return None
+        for i in fc:
+            if i not in queue:
+                if enqueue_condition_fn(csp, i):
+                    queue.append(i)
+
+    return dequeue
 
 def condition_domain_reduction(csp, var) :
     """Returns True if var should be enqueued under the all-reduced-domains
