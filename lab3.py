@@ -130,7 +130,27 @@ def solve_constraint_forward_checking(problem) :
     Solves the problem using depth-first search with forward checking.
     Same return type as solve_constraint_dfs.
     """
-    raise NotImplementedError
+    queue = [problem]
+    extensions = 0
+    while queue:
+        curr = queue.pop(0)
+        extensions += 1
+        if not has_empty_domains(curr):
+            if check_all_constraints(curr):
+                if curr.unassigned_vars:
+                    var = curr.pop_next_unassigned_var()
+                    domains = curr.get_domain(var)
+                    new_problems = []
+                    for value in domains:
+                        new_problem = curr.copy()
+                        new_problem.set_assignment(var, value)
+                        forward_check(new_problem, var)
+                        new_problems.append(new_problem)
+                    queue = new_problems + queue
+                else:
+                    return (curr.assignments, extensions)
+
+    return (None, extensions)
 
 
 # QUESTION 2: How many extensions does it take to solve the Pokemon problem
