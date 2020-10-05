@@ -314,7 +314,8 @@ def solve_constraint_generic(problem, enqueue_condition=None) :
 #    with forward checking and propagation through singleton domains? (Don't
 #    use domain reduction before solving it.)
 
-ANSWER_5 = None
+print(solve_constraint_generic(get_pokemon_problem(), condition_singleton))
+ANSWER_5 = 8
 
 
 #### Part 6: Defining Custom Constraints #######################################
@@ -322,12 +323,12 @@ ANSWER_5 = None
 def constraint_adjacent(m, n) :
     """Returns True if m and n are adjacent, otherwise False.
     Assume m and n are ints."""
-    raise NotImplementedError
+    return (abs(m-n) <= 1)
 
 def constraint_not_adjacent(m, n) :
     """Returns True if m and n are NOT adjacent, otherwise False.
     Assume m and n are ints."""
-    raise NotImplementedError
+    return (not constraint_adjacent(m, n))
 
 def all_different(variables) :
     """Returns a list of constraints, with one difference constraint between
