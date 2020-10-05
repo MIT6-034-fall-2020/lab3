@@ -223,7 +223,6 @@ def solve_constraint_propagate_reduced_domains(problem) :
                         new_problem = curr.copy()
                         new_problem.set_assignment(var, value)
                         domain_reduction(new_problem, [var])
-                        forward_check(new_problem, var)
                         new_problems.append(new_problem)
                     queue = new_problems + queue
                 else:
@@ -288,7 +287,28 @@ def solve_constraint_generic(problem, enqueue_condition=None) :
     condition (a function). If enqueue_condition is None, uses DFS only.
     Same return type as solve_constraint_dfs.
     """
-    raise NotImplementedError
+    queue = [problem]
+    extensions = 0
+    while queue:
+        curr = queue.pop(0)
+        extensions += 1
+        if not has_empty_domains(curr):
+            if check_all_constraints(curr):
+                if curr.unassigned_vars:
+                    var = curr.pop_next_unassigned_var()
+                    domains = curr.get_domain(var)
+                    new_problems = []
+                    for value in domains:
+                        new_problem = curr.copy()
+                        new_problem.set_assignment(var, value)
+                        if enqueue_condition != None:
+                            propagate(enqueue_condition, new_problem, [var])
+                        new_problems.append(new_problem)
+                    queue = new_problems + queue
+                else:
+                    return (curr.assignments, extensions)
+
+    return (None, extensions)
 
 # QUESTION 5: How many extensions does it take to solve the Pokemon problem
 #    with forward checking and propagation through singleton domains? (Don't
