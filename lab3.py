@@ -323,7 +323,8 @@ ANSWER_5 = 8
 def constraint_adjacent(m, n) :
     """Returns True if m and n are adjacent, otherwise False.
     Assume m and n are ints."""
-    return (abs(m-n) <= 1)
+    # return(m,n)
+    return (abs(m-n) == 1)
 
 def constraint_not_adjacent(m, n) :
     """Returns True if m and n are NOT adjacent, otherwise False.
@@ -333,14 +334,20 @@ def constraint_not_adjacent(m, n) :
 def all_different(variables) :
     """Returns a list of constraints, with one difference constraint between
     each pair of variables."""
-    raise NotImplementedError
+    constraints = []
+    for i in range(len(variables)):
+        for j in range(i+1, len(variables)):
+            constraint = Constraint(variables[i],variables[j],constraint_different)
+            constraints.append(constraint)
+
+    return(constraints)
 
 
 #### SURVEY ####################################################################
 
-NAME = None
-COLLABORATORS = None
-HOW_MANY_HOURS_THIS_LAB_TOOK = None
-WHAT_I_FOUND_INTERESTING = None
-WHAT_I_FOUND_BORING = None
-SUGGESTIONS = None
+NAME = "Nabib Ahmed"
+COLLABORATORS = "None"
+HOW_MANY_HOURS_THIS_LAB_TOOK = "8"
+WHAT_I_FOUND_INTERESTING = "The modular structure"
+WHAT_I_FOUND_BORING = "Figuring out the API"
+SUGGESTIONS = "Some concrete examples to use for debugging"
